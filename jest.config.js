@@ -2,7 +2,7 @@
 export default {
   verbose: true,
   preset: 'ts-jest/presets/default-esm',
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
   globals: {
     'ts-jest': {
       useESM: true,
