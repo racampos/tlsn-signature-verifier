@@ -72,23 +72,18 @@ export async function verifier(jsonData: string) {
       }),
     });
 
-    // console.log('tlsnProof.session.header:', tlsnProof.session.header);
     const header = Header.serialize(tlsnProof.session.header);
-    // console.log('header:', header);
     const headerBytes = header.toBytes();
+    // const headerBytes = [97, 180, 179, 127, 143, 171, 102, 152, 12, 59, 30, 146, 214, 137, 234, 111, 0, 180, 236, 192, 40, 87, 95, 255, 249, 138, 80, 210, 9, 6, 34, 2, 97, 139, 99, 106, 123, 249, 206, 146, 169, 198, 0, 174, 41, 126, 8, 238, 130, 46, 92, 151, 46, 11, 233, 54, 185, 122, 67, 82, 197, 205, 229, 10, 211, 0, 0, 0, 0, 0, 0, 0, 90, 6, 0, 0, 0, 0, 0, 0, 151, 117, 8, 102, 0, 0, 0, 0, 0, 65, 4, 231, 210, 182, 148, 213, 174, 89, 198, 143, 22, 197, 201, 169, 156, 123, 94, 113, 18, 56, 63, 125, 7, 3, 118, 89, 66, 71, 211, 155, 64, 160, 39, 38, 113, 147, 132, 89, 110, 91, 76, 24, 155, 200, 79, 46, 189, 161, 201, 177, 204, 234, 177, 51, 187, 189, 213, 22, 120, 205, 214, 122, 210, 73, 141, 161, 24, 170, 137, 111, 237, 52, 38, 249, 233, 16, 140, 202, 239, 240, 109, 32, 231, 22, 13, 10, 64, 67, 130, 27, 165, 166, 160, 167, 209, 206, 67];
 
     console.log('headerBytes:', headerBytes);
 
     const headerFields: Field[] = [];
     headerBytes.forEach((byte: number) => headerFields.push(Field(byte)));
 
-    // headerFields.fill(Field(0), headerFields.length, 256);
+    const headerFieldsStr = headerFields.map((field) => field.toString());
 
-    while (headerFields.length < 256) {
-      headerFields.push(Field(0));
-    }
-
-    console.log('headerFields:', headerFields);
+    console.log('headerFields:', headerFieldsStr);
 
     const privKey = PrivateKey.fromBase58(
       'EKFSmntAEAPm5CnYMsVpfSEuyNfbXfxy2vHW8HPxGyPPgm5xyRtN'
@@ -98,15 +93,20 @@ export async function verifier(jsonData: string) {
 
     console.log('pubKey:', pubKey.toBase58());
 
-    const signatureSig = Signature.fromBase58(tlsnProof.session.signature);
-    const isValid = signatureSig.verify(pubKey, headerFields);
+    const rustSignature = Signature.fromBase58(tlsnProof.session.signature);
+    const isValid = rustSignature.verify(pubKey, headerFields);
     isValid.assertTrue();
 
-    console.log('signatureSig - r: ', signatureSig.r.toBigInt());
-    console.log('signatureSig - s: ', signatureSig.s.toBigInt());
+    console.log('signature - r: ', rustSignature.r.toBigInt());
+    console.log('signature - s: ', rustSignature.s.toBigInt());
+
+    const o1jsSignature = Signature.create(privKey, headerFields);
+    console.log('o1jsSignature - r: ', o1jsSignature.r.toBigInt());
+    console.log('o1jsSignature - s: ', o1jsSignature.s.toBigInt());
+    console.log('o1jsSignature - toBase58: ', o1jsSignature.toBase58());
 
     return {
-      signature: signatureSig,
+      signature: rustSignature,
       headerFields: headerFields,
     };
 
