@@ -23,7 +23,7 @@ function App() {
   useEffect(() => {
     (async () => {
       try {
-        const response = await fetch('../simple_proof_new.json');
+        const response = await fetch('../simple_proof_b58.json');
         const data = await response.text();
         setJsonData(data);
 

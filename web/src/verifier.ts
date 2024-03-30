@@ -90,42 +90,24 @@ export async function verifier(jsonData: string) {
 
     console.log('headerFields:', headerFields);
 
-    // const headerFieldsSig = 2;
-    const headerFieldsSig = Signature.fromFields(headerFields);
-
     const privKey = PrivateKey.fromBase58(
       'EKFSmntAEAPm5CnYMsVpfSEuyNfbXfxy2vHW8HPxGyPPgm5xyRtN'
     );
-
-    // console.log('headerFieldsSig - r: ', headerFieldsSig.r.toBigInt());
-    // console.log('headerFieldsSig - s: ', headerFieldsSig.s.toBigInt());
 
     const pubKey = PublicKey.fromPrivateKey(privKey);
 
     console.log('pubKey:', pubKey.toBase58());
 
-    const isValid = headerFieldsSig.verify(pubKey, headerFields);
-
+    const signatureSig = Signature.fromBase58(tlsnProof.session.signature);
+    const isValid = signatureSig.verify(pubKey, headerFields);
     isValid.assertTrue();
-
-    const signatureBytes = tlsnProof.session.signature.map((byte: number) =>
-      Field(byte)
-    );
-
-    // while (signatureBytes.length < 256) {
-    //   signatureBytes.push(Field(0));
-    // }
-
-    // signatureBytes.fill(Field(0), headerFields.length, 256);
-
-    const signatureSig = Signature.fromFields(signatureBytes);
 
     console.log('signatureSig - r: ', signatureSig.r.toBigInt());
     console.log('signatureSig - s: ', signatureSig.s.toBigInt());
 
     return {
       signature: signatureSig,
-      headerFieldsSig: headerFieldsSig,
+      headerFields: headerFields,
     };
 
     // const txn1 = await Mina.transaction(senderAccount, () => {

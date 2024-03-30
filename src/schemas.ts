@@ -77,7 +77,7 @@ const SessionInfoSchema = z.object({
   handshake_decommitment: HandshakeDecommitmentSchema,
 });
 
-const SignatureSchema = z.array(z.number());
+const SignatureSchema = z.string();
 
 const ServerPublicKeySchema = z.object({
   group: z.string(),

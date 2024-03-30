@@ -16,7 +16,7 @@ import { z } from 'zod';
 import { RootSchema } from './schemas.js';
 import { p } from 'o1js/dist/node/bindings/crypto/finite-field.js';
 
-import { bcs } from '@mysten/bcs';
+// import { bcs } from '@mysten/bcs';
 
 import stableStringify from 'json-stable-stringify';
 
@@ -60,40 +60,40 @@ if (result.success) {
   // ----------------------------------------------------
   // Serialize the header object in a deterministic manner
 
-  const Header = bcs.struct('Header', {
-    encoder_seed: bcs.fixedArray(32, bcs.u8()),
-    merkle_root: bcs.fixedArray(32, bcs.u8()),
-    sent_len: bcs.u64(),
-    recv_len: bcs.u64(),
-    handshake_summary: bcs.struct('HandshakeSummary', {
-      time: bcs.u64(),
-      server_public_key: bcs.struct('ServerPublicKey', {
-        group: bcs.string(),
-        key: bcs.fixedArray(32, bcs.u8()),
-      }),
-      handshake_commitment: bcs.fixedArray(32, bcs.u8()),
-    }),
-  });
+  // const Header = bcs.struct('Header', {
+  //   encoder_seed: bcs.fixedArray(32, bcs.u8()),
+  //   merkle_root: bcs.fixedArray(32, bcs.u8()),
+  //   sent_len: bcs.u64(),
+  //   recv_len: bcs.u64(),
+  //   handshake_summary: bcs.struct('HandshakeSummary', {
+  //     time: bcs.u64(),
+  //     server_public_key: bcs.struct('ServerPublicKey', {
+  //       group: bcs.string(),
+  //       key: bcs.fixedArray(32, bcs.u8()),
+  //     }),
+  //     handshake_commitment: bcs.fixedArray(32, bcs.u8()),
+  //   }),
+  // });
 
-  const header = Header.serialize(tlsnProof.session.header);
-  const headerBytes = header.toBytes();
+  // const header = Header.serialize(tlsnProof.session.header);
+  // const headerBytes = header.toBytes();
 
-  const headerFields: Field[] = [];
+  // const headerFields: Field[] = [];
 
-  headerBytes.forEach((byte: number) => headerFields.push(Field(byte)));
+  // headerBytes.forEach((byte: number) => headerFields.push(Field(byte)));
 
-  const signatureBytes = tlsnProof.session.signature.map((byte: number) =>
-    Field(byte)
-  );
+  // const signatureBytes = tlsnProof.session.signature.map((byte: number) =>
+  //   Field(byte)
+  // );
 
-  const signature = Signature.fromFields(signatureBytes);
+  // const signature = Signature.fromFields(signatureBytes);
 
-  const txn1 = await Mina.transaction(senderAccount, () => {
-    zkAppInstance.verify(headerFields, signature);
-  });
-  await txn1.prove();
+  // const txn1 = await Mina.transaction(senderAccount, () => {
+  //   zkAppInstance.verify(headerFields, signature);
+  // });
+  // await txn1.prove();
 
-  await txn1.sign([senderKey]).send();
+  // await txn1.sign([senderKey]).send();
 } else {
   // Data is invalid
   console.error('Invalid data:', result.error);
