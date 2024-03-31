@@ -80,7 +80,8 @@ const SessionInfoSchema = z.object({
 const SignatureSchema = z.string();
 
 const ServerPublicKeySchema = z.object({
-  group: z.string(),
+  // group: z.string(),
+  group: z.array(z.number()),
   key: z.array(z.number()),
 });
 

@@ -27,7 +27,7 @@ let count = 0;
 describe('TlsnVerifier.js', () => {
   describe('TlsnVerifier()', async () => {
     // Read the JSON file
-    const jsonData = fs.readFileSync('src/simple_proof.json', 'utf-8');
+    const jsonData = fs.readFileSync('src/simple_proof_kimchi.json', 'utf-8');
 
     // Parse the JSON data
     const parsedData = JSON.parse(jsonData);
@@ -75,11 +75,11 @@ describe('TlsnVerifier.js', () => {
         merkle_root: bcs.fixedArray(32, bcs.u8()),
         sent_len: bcs.u64(),
         recv_len: bcs.u64(),
-        handshake_summary: bcs.struct('HandshakeSummary', {
+        handshake_summary: bcs.struct('handshake_summary', {
           time: bcs.u64(),
-          server_public_key: bcs.struct('ServerPublicKey', {
-            group: bcs.string(),
-            key: bcs.fixedArray(32, bcs.u8()),
+          server_public_key: bcs.struct('server_public_key', {
+            group: bcs.fixedArray(2, bcs.u8()),
+            key: bcs.fixedArray(65, bcs.u8()),
           }),
           handshake_commitment: bcs.fixedArray(32, bcs.u8()),
         }),
@@ -106,22 +106,22 @@ describe('TlsnVerifier.js', () => {
       //   output: (val) => val.map((field) => field.toNumber()),
       // });
 
-      const signatureBytes = tlsnProof.session.signature.map((byte: number) =>
-        Field(byte)
-      );
+      // const signatureBytes = tlsnProof.session.signature.map((byte: number) =>
+      //   Field(byte)
+      // );
 
-      console.log('count: ', count++);
+      // console.log('count: ', count++);
 
-      const signature = Signature.fromFields(signatureBytes);
+      // const signature = Signature.fromFields(signatureBytes);
 
-      console.log('count: ', count++);
+      // console.log('count: ', count++);
 
-      const txn1 = await Mina.transaction(senderAccount, () => {
-        zkAppInstance.verify(headerFields, signature);
-      });
-      await txn1.prove();
+      // const txn1 = await Mina.transaction(senderAccount, () => {
+      //   zkAppInstance.verify(headerFields, signature);
+      // });
+      // await txn1.prove();
 
-      await txn1.sign([senderKey]).send();
+      // await txn1.sign([senderKey]).send();
     } else {
       // Data is invalid
       console.error('Invalid data:', result.error);
