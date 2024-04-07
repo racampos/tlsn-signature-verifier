@@ -75,20 +75,9 @@ export async function verifier(jsonData: string) {
 
     const pubKey = PublicKey.fromPrivateKey(privKey);
 
-    const rustSignature = Signature.fromBase58(tlsnProof.session.signature);
+    const rustSignature = Signature.fromBase58(tlsnProof.session.signature.MinaSchnorr);
     const isValid = rustSignature.verify(pubKey, headerFields);
     console.log('isValid:', isValid.toBoolean());
-
-    // console.log('signature - r: ', rustSignature.r.toBigInt());
-    // console.log('signature - s: ', rustSignature.s.toBigInt());
-    // console.log('rustSignature - toBase58: ', rustSignature.toBase58());
-
-    // const o1jsSignature = Signature.create(privKey, headerFields);
-
-    // console.log('o1jsSignature:', o1jsSignature);
-    // console.log('o1jsSignature - r: ', o1jsSignature.r.toBigInt());
-    // console.log('o1jsSignature - s: ', o1jsSignature.s.toBigInt());
-    // console.log('o1jsSignature - toBase58: ', o1jsSignature.toBase58());
 
     return {
       signature: rustSignature,

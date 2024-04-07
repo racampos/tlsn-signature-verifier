@@ -77,10 +77,11 @@ const SessionInfoSchema = z.object({
   handshake_decommitment: HandshakeDecommitmentSchema,
 });
 
-const SignatureSchema = z.string();
+const SignatureSchema = z.object({
+  MinaSchnorr: z.string(),
+});
 
 const ServerPublicKeySchema = z.object({
-  // group: z.string(),
   group: z.array(z.number()),
   key: z.array(z.number()),
 });
