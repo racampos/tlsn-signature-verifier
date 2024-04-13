@@ -46,7 +46,6 @@
     "o1js": "0.17.*"
   },
   "dependencies": {
-    "@mysten/bcs": "^0.11.1",
     "json-stable-stringify": "^1.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

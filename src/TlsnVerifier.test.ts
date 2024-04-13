@@ -18,8 +18,6 @@ import { z } from 'zod';
 import { RootSchema } from './schemas.js';
 import { p } from 'o1js/dist/node/bindings/crypto/finite-field.js';
 
-import { bcs } from '@mysten/bcs';
-
 import stableStringify from 'json-stable-stringify';
 
 let count = 0;
@@ -67,61 +65,8 @@ describe('TlsnVerifier.js', () => {
 
       console.log('count: ', count++);
 
-      // ----------------------------------------------------
-      // Serialize the header object in a deterministic manner
 
-      const Header = bcs.struct('Header', {
-        encoder_seed: bcs.fixedArray(32, bcs.u8()),
-        merkle_root: bcs.fixedArray(32, bcs.u8()),
-        sent_len: bcs.u64(),
-        recv_len: bcs.u64(),
-        handshake_summary: bcs.struct('handshake_summary', {
-          time: bcs.u64(),
-          server_public_key: bcs.struct('server_public_key', {
-            group: bcs.fixedArray(2, bcs.u8()),
-            key: bcs.fixedArray(65, bcs.u8()),
-          }),
-          handshake_commitment: bcs.fixedArray(32, bcs.u8()),
-        }),
-      });
-
-      console.log('count: ', count++);
-
-      const header = Header.serialize(tlsnProof.session.header);
-      console.log('count: ', count++);
-
-      const headerBytes = header.toBytes();
-
-      console.log('count: ', count++);
-
-      const headerFields: Field[] = [];
-
-      headerBytes.forEach((byte: number) => headerFields.push(Field(byte)));
-
-      console.log('count: ', count++);
-
-      // // Define the transform for the Signature
-      // const sdsabhjdsabhjdsa = bcs.fixedArray(32, bcs.u8()).transform({
-      //   input: (val: number[]) => val.map((byte) => Field(byte)),
-      //   output: (val) => val.map((field) => field.toNumber()),
-      // });
-
-      // const signatureBytes = tlsnProof.session.signature.map((byte: number) =>
-      //   Field(byte)
-      // );
-
-      // console.log('count: ', count++);
-
-      // const signature = Signature.fromFields(signatureBytes);
-
-      // console.log('count: ', count++);
-
-      // const txn1 = await Mina.transaction(senderAccount, () => {
-      //   zkAppInstance.verify(headerFields, signature);
-      // });
-      // await txn1.prove();
-
-      // await txn1.sign([senderKey]).send();
+      
     } else {
       // Data is invalid
       console.error('Invalid data:', result.error);
