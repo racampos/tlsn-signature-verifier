@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { bcs } from '@mysten/bcs';
 import { z } from 'zod';
 
 import { verifier } from './verifier';
@@ -7,7 +6,6 @@ import ZkappWorkerClient from './mina/zkappWorkerClient';
 import { Field, PublicKey } from 'o1js';
 
 function App() {
-  // Use the BCS package here to test its functionality
   const [jsonData, setJsonData] = useState<string | null>(null);
   const [state, setState] = useState({
     zkappWorkerClient: null as null | ZkappWorkerClient,
@@ -37,7 +35,7 @@ function App() {
 
   return (
     <div>
-      <h1>BCS Test</h1>
+      <h1>Signature Test</h1>
       {jsonData ? <pre>{jsonData}</pre> : <p>Loading JSON data...</p>}
     </div>
   );
